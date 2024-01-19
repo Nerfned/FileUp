@@ -1,0 +1,69 @@
+body {
+    background-color: black;
+    color: white;
+
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+}
+
+.divider {
+    margin-top: 20px;
+}
+
+.header-buttons {
+    display: flex;
+    justify-content: center;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 4px 2px;
+
+}
+
+.style-buttons {
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    background: black;
+    color: #ffffff;
+    padding: 20px;
+    width: 150px;
+    height: 57px;
+    margin-right: 20px;
+    margin-left: 20px;
+    font-weight: bolder;
+}
+
+.style-command {
+    border-radius: 25px;
+    border: 2px solid #ff0000;
+    background: black;
+    color: #ffffff;
+    padding: 10px;
+    width: 135px;
+    height: 57px;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.upload {
+    display: flex;
+    justify-content: center;
+}
+
+#myFile {
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    background: black;
+    color: #ffffff;
+    padding: 10px;
+    width: max-content;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+

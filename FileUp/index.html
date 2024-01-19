@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<!-- Autor Joel Wollny -->
+
+<html>
+
+<head>
+  <!-- Verweis auf externe CSS-Datei -->
+  <link rel="stylesheet" href="style.css">
+  <title>Datei-Upload und Archiv</title>
+  <script>
+    // Anfangsanzeigemodus
+    var display = "fileupload";
+    window.onload = renderDisplay(display);
+
+    // Funktion zum Senden einer Datei an den Server
+    function sendfile(file, fileName) {
+      var ajax = new XMLHttpRequest();
+      ajax.open("POST", "../cgi-bin/upload.cgi", true);
+      ajax.responseType = "text";
+
+      ajax.onload = () => {
+        if (ajax.readyState == 4 && ajax.status == 200) {
+          alert('Datei erfolgreich hochgeladen');
+        } else {
+          alert('Ein Fehler ist aufgetreten!');
+        }
+      }
+
+      ajax.onerror = () => {
+        console.error();
+        alert('Ein Fehler ist aufgetreten!');
+      }
+
+      // Entfernen von allen Inhalten die nicht die Base64 sind       
+      let parts = file.split(",");
+      file = parts.slice(1).join(",");
+      file = file.replace(/,/g, '\\');
+
+      // Sende die Anfrage mit den formatierten Daten
+      ajax.send(`fileupload=${file}&name=${fileName}`);
+    }
+
+    // Funktion zum Vorbereiten und Senden von Dateien an den Server
+    function prepareFilesToSend() {
+      var fileInput = document.getElementById('myFile');
+      var file = fileInput.files[0];
+
+      // Überprüfe, ob eine Datei ausgewählt ist
+      if (file == undefined) return alert('Wählen Sie eine Datei aus');
+
+      // Erlaubte Dateitypen
+      var legalFiles = /(\.txt|\.svg|\.png|\.jpg|\.pdf)$/i;
+      // Überprüfe, ob der ausgewählte Dateityp erlaubt ist
+      if (!legalFiles.exec(file.name)) return alert('Ungültiger Dateityp. Erlaubte Typen sind .txt, .svg, .png, .jpg oder .pdf');
+
+      // Erstelle ein FileReader-Objekt um damit die Datei in eine Base64 zu verwandeln
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        let fileName = removeWhitespace(file.name)
+        file = reader.result;
+        sendfile(file, fileName);
+      }
+
+      reader.readAsDataURL(file);
+    };
+
+    // Funktion zum Rendern unterschiedlicher Anzeigemodi
+    function renderDisplay(modeSelector) {
+      // Speichere den aktuellen Anzeigemodus
+      display = modeSelector;
+      var ajax = new XMLHttpRequest();
+      ajax.open("POST", "../cgi-bin/upload.cgi", true);
+      ajax.responseType = 'text';
+
+      // Funktion, die aufgerufen wird, wenn die Anfrage erfolgreich ist
+      ajax.onload = () => {
+        if (ajax.readyState == 4 && ajax.status == 200) {
+          // Aktualisiere den HTML-Inhalt des Anzeigebereichs
+          document.getElementById('display').innerHTML = ajax.responseText;
+          // Aktualisiere das Archiv nach einer Verzögerung
+          updateArchive();
+        } else {
+          alert('Bitte Seite neuladen');
+        }
+      };
+
+
+      ajax.send(`layout=${modeSelector}`)
+    }
+
+    // Funktion zum Löschen einer Datei
+    function deleteFile(file) {
+      var ajax = new XMLHttpRequest();
+      ajax.open("POST", "../cgi-bin/upload.cgi", true);
+      ajax.responseType = 'text';
+
+      ajax.onload = () => {
+        if (ajax.status === 200) {
+          document.getElementById('display').innerHTML = ajax.responseText;
+          // Aktualisiere das Archiv nach einer Verzögerung
+          updateArchive();
+        } else {
+          alert('Bitte Seite neuladen');
+        }
+      };
+
+      ajax.send(`filedelete=${file}`);
+    }
+
+    // Funktion zum Entfernen von Leerzeichen aus einem Wert
+    function removeWhitespace(value) {
+      return value.replace(/\s/g, '');
+    }
+
+    // Funktion zum Aktualisieren der Archivanzeige nach einer Verzögerung
+    function updateArchive() {
+      setTimeout(() => {
+        display === "archiv" && renderDisplay("archiv")
+      }, 30000);
+    }
+
+  </script>
+</head>
+
+<body>
+
+  <h1 class="title">Datei-Upload und Archiv</h1>
+  <!-- Header-Schaltflächen zum Wechseln der Anzeigemodi -->
+  <div class="header-buttons">
+    <button class="style-buttons center" onclick="renderDisplay('fileupload')">Datei hochladen</button>
+    <button class="style-buttons center" onclick="renderDisplay('archiv')">Archiv</button>
+  </div>
+  <hr class="divider dashed">
+  <!-- Anzeigebereich für Datei-Upload und Archiv -->
+  <div id="display"></div>
+
+</body>
+
+</html>

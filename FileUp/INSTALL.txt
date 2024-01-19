@@ -1,0 +1,27 @@
+### Installation
+
+
+
+1. **Apache2 und CGI:**
+   - Installiere Apache2: `sudo apt-get install apache2 -y`
+   - Aktiviere das CGI-Modul: `sudo a2enmod cgi`
+   - Starte Apache2 neu: `sudo systemctl restart apache2`
+
+2. **Speichern der Scripte:**
+   - Entpacke die Dateien aus dem Archiv.
+   - Speichere das "upload.cgi"-Skript unter `/usr/lib/cgi-bin/`.
+   - Der Ordner "FileUp" wird unter `/var/www/html` gespeichert.
+   - Setze die Berechtigungen: 
+     ```
+     sudo chown -R www-data:www-data /usr/lib/cgi-bin/
+     sudo chmod -R 755 /usr/lib/cgi-bin/
+     sudo chown -R www-data:www-data /var/www/html/FileUp
+     sudo chmod -R 755 /var/www/html/FileUp
+     ```
+
+3. **Fertigstellung:**
+   - Die Anwendung ist unter der URL `http://[PI_IPADDRESS]/FileUp` erreichbar.
+    Stellen Sie sicher das `[PI_IPADDRESS]` die IP-Adresse der Hardware auf der Sie FileUp installieren iFst.
+
+### Hinweis
+
